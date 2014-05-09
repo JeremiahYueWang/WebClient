@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.*;
 import android.os.Build;
 
 public class WebClientActivity extends Activity {
@@ -24,6 +25,25 @@ public class WebClientActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_client);
+        
+        etUserName=(EditText) this.findViewById(R.id.etUserName);
+        etPassWord=(EditText) this.findViewById(R.id.etPassWord);
+        btnEnter=(Button) this.findViewById(R.id.btnEnter);
+        
+        btnEnter.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				String userName=etUserName.getText().toString().trim();
+				String password=etPassWord.getText().toString().trim();
+				
+				System.out.println(userName+" "+password);
+			}
+		});
+        
+        GenIDs.getDeviceToken(this.getBaseContext());
+        GenIDs.getDUID(this.getBaseContext());
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -41,6 +61,10 @@ public class WebClientActivity extends Activity {
         }
         
     }
+    
+    private EditText etUserName;
+    private EditText etPassWord;
+    private Button btnEnter;
     
     private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
 

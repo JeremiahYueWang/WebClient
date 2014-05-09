@@ -4,5 +4,10 @@
     <string name="app_name">WebClient</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="tvusername">用户名</string>
+    <string name="etusernamehint">请输入用户名</string>
+    <string name="tvpassword">密码</string>
+    <string name="etpasswordhint">请输入密码</string>    
+    <string name="btnenter">确定</string>
 
 </resources>

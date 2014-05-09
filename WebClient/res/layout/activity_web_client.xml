@@ -1,8 +1,62 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.webclient.WebClientActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        "
+        <TextView
+	        android:id="@+id/tvUserName"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/tvusername" />
+
+	    <EditText
+	        android:id="@+id/etUserName"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="@string/etusernamehint"
+	        android:ems="10" >
+	    </EditText>        
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+	    
+        <TextView
+	        android:id="@+id/tvpassword"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/tvpassword" />
+
+	    <EditText
+	        android:id="@+id/etPassWord"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+	        android:hint="@string/etpasswordhint"
+	        android:inputType="textPassword" >
+
+	    </EditText> 
+        
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/btnEnter"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/btnenter"
+        />
+   
+</LinearLayout>
 
