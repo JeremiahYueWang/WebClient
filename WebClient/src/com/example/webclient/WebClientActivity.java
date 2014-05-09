@@ -1,9 +1,15 @@
 package com.example.webclient;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
+import android.net.*;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,8 +31,48 @@ public class WebClientActivity extends Activity {
                     .commit();
         }
         
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+        	// fetch data
+        	
+        }else{
+        	// display error
+        }
         
-        
+    }
+    
+    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			
+			
+			return null;
+		}
+		
+		private void logInProcess(){
+			
+			JSONObject logIn=new JSONObject();
+			try {
+				logIn.put("duid", getDuid());
+				logIn.put("type", 61);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+    	
+    }
+    private String duid="sss";	//每次通信唯一标识，通信标识码，客户端生成
+    
+    private String getDuid(){
+    	return duid;
+    }
+    private void genDuid(){
+    	duid="hello, this is a test";
     }
 
 
