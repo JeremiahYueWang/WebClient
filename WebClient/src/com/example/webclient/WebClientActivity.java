@@ -1,5 +1,9 @@
 package com.example.webclient;
 
+import java.io.*;
+import java.net.*;
+
+import com.example.protocol.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +24,9 @@ import android.widget.*;
 import android.os.Build;
 
 public class WebClientActivity extends Activity {
+	public WebClientActivity(){
+		this.webClientActivity=this;
+	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +46,13 @@ public class WebClientActivity extends Activity {
 				String password=etPassWord.getText().toString().trim();
 				
 				System.out.println(userName+" "+password);
+				new DownloadWebpageTask().execute();
+				System.out.println("main thread end!!");
 			}
 		});
         
-        GenIDs.getDeviceToken(this.getBaseContext());
-        GenIDs.getDUID(this.getBaseContext());
+        //GenIDs.getDeviceToken(this.getBaseContext());
+       // GenIDs.getDUID(this.getBaseContext());
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -51,27 +60,94 @@ public class WebClientActivity extends Activity {
                     .commit();
         }
         
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
-        	// fetch data
-        	
-        }else{
-        	// display error
-        }
+
         
     }
     
     private EditText etUserName;
     private EditText etPassWord;
     private Button btnEnter;
+    public static WebClientActivity webClientActivity=null;
+    static public WebClientActivity getWebClientActivity(){
+    	return webClientActivity;
+    }
     
     private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
 
+//    	public void execute(){
+//    		doInBackground();
+//    	}
+    	
 		@Override
 		protected String doInBackground(String... arg0) {
 			// TODO Auto-generated method stub
 			
+	        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+	        if(networkInfo != null && networkInfo.isConnected()){
+	        	// fetch data\
+	        	String url_path="http://www.jiananhuaxia.com/a/ios/user/";
+	        	try {	        
+	        		URL url = new URL(url_path);
+	        		HttpURLConnection connection = (HttpURLConnection) url.openConnection();		
+	        		connection.setConnectTimeout(3000); // 请求超时时间3s 
+	        		connection.setRequestMethod("POST");
+	        		connection.setDoInput(true);
+	        		connection.setDoOutput(true);
+	        	    connection.setChunkedStreamingMode(0);
+	        	    //connection.setRequestProperty("Content-Length", "0");
+	        	   // connection.setRequestProperty("Content-type", "application/json");
+	        	    
+	        	    connection.connect();
+
+	        	    OutputStream out = new BufferedOutputStream(connection.getOutputStream());
+	        	    
+	        	    JSONObject login=new JSONObject();
+	        	    login.put(LoginUp.DUID, "BB6D8252-3321-46C5-A077-74EE33246211");
+	        	    login.put(LoginUp.TYPE, 61);
+	        	    JSONObject logincontent=new JSONObject();
+	        	    logincontent.put(LoginUp.CONTENT_DEVICETOKEN, GenIDs.getDeviceToken(WebClientActivity.getWebClientActivity().getBaseContext()));
+	        	    logincontent.put(LoginUp.CONTENT_USERNAME, "Magical");
+	        	    logincontent.put(LoginUp.CONTENT_PASSWORD, "123456");
+	        	    login.put(LoginUp.CONTENT, logincontent);
+	        	    login.put(LoginUp.VERSION, "0.5.4.140424");
+	        	    
+	        	    System.out.println("upload data:"+login.toString());
+	        	    
+	        	    out.write(login.toString().getBytes());
+	        	    out.flush();
+	        	    out.close();
+	        	    //
+	        	    
+	        		int code = connection.getResponseCode(); // 返回状态码  
+	        		System.out.println("responsecode:"+code);
+	        		if (code == 200) { 
+	        			// 或得到输入流，此时流里面已经包含了服务端返回回来的JSON数据了,此时需要将这个流转换成字符串  
+
+		        	    InputStream in = new BufferedInputStream(connection.getInputStream());
+		        	    ByteArrayOutputStream receive=new ByteArrayOutputStream();;
+		        	    
+		        	    byte[] data = new byte[1024];
+		        	    int len=-1;
+		        	    while((in.read(data))!=-1){
+		        	    	receive.write(data, 0, len);
+		        	    }
+		        	    receive.close();
+		        	    in.close();
+		        	    System.out.println(receive.toString());
+	                 }  
+	        		connection.disconnect();
+	        		System.out.println("connection.disconnect()");
+	            } catch (Exception e) {  
+	                 // TODO: handle exception  
+	            	e.printStackTrace();
+	            }finally{
+	            	//connection.disconnect();
+	            }
+	        	
+	        }else{
+	        	// display error
+	        }
 			
 			return null;
 		}
