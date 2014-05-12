@@ -3,6 +3,8 @@ package com.example.webclient;
 import java.io.*;
 import java.net.*;
 
+import javax.security.auth.login.LoginException;
+
 import com.example.protocol.*;
 
 import org.apache.http.client.*;
@@ -90,22 +92,14 @@ public class WebClientActivity extends Activity {
 	        if(networkInfo != null && networkInfo.isConnected()){
 	        	// fetch data\
 	        	String url_path="http://www.jiananhuaxia.com/a/ios/user/";
-	        	
-//	        	try{
-//		        	HttpClient httpclient = new DefaultHttpClient();   
-//		        	HttpPost httpReqest = new HttpPost(url_path);
-//		        	
-//		        	
-//	        	}catch(Exception e){
-//	        		e.printStackTrace();
-//	        	}
+
 	        	
 	        	
 	        	try {	        
 	        		URL url = new URL(url_path);
 	        		HttpURLConnection connection = (HttpURLConnection) url.openConnection();		
 	        		connection.setConnectTimeout(3000); // 请求超时时间3s 
-	        		connection.setRequestMethod("GET");
+	        		connection.setRequestMethod("POST");
 	        		connection.setDoInput(true);
 	        		connection.setDoOutput(true);
 	        	    //connection.setChunkedStreamingMode(0);
@@ -127,6 +121,7 @@ public class WebClientActivity extends Activity {
 	        	    connection.setRequestProperty("Transfer-Encoding","identity");
 	        	    connection.setRequestProperty("Content-Length", login.toString().getBytes().length+"");
 	        	    connection.setRequestProperty("Content-type", "application/json");
+	        	    connection.setRequestProperty("Connection", "keep-alive");
 	        	    //connection.setUseCaches(false);
 	        	    //connection.setInstanceFollowRedirects(true);
 	        	    connection.connect();
@@ -136,7 +131,7 @@ public class WebClientActivity extends Activity {
 	        	    
 	        	    out.write(login.toString().getBytes());
 	        	    out.flush();
-	        	    out.close();
+	        	    //out.close();
 	        	    //
 	        	    
 	        		int code = connection.getResponseCode(); // 返回状态码  
@@ -158,17 +153,52 @@ public class WebClientActivity extends Activity {
 		        	    System.out.println(receive.toString());
 		        	    
 		        	    JSONObject loginDown=new JSONObject(receive.toString());
-		        	    JSONObject loginDownContent=loginDown.getJSONObject(LoginDown.CONTENT);
-		        	    String uid=loginDownContent.getString(LoginDown.CONTENT_UID);
 		        	    String token=loginDown.getString(LoginDown.TOKEN);
 		        	    String type=loginDown.getString(LoginDown.TYPE);
-		        	    String success=loginDown.getString(LoginDown.SUCCESS);
 		        	    String duid=loginDown.getString(LoginDown.DUID);
-		        	    System.out.println("duid:"+duid);
-		        	    System.out.println("type:"+type);
-		        	    System.out.println("success:"+success);
-		        	    System.out.println("token:"+token);
-		        	    System.out.println("content: uid:"+uid);
+		        	    boolean success=loginDown.getBoolean(LoginDown.SUCCESS);
+		        	    if(success){
+		        	    	JSONObject loginDownContent=loginDown.getJSONObject(LoginDown.CONTENT);
+		        	    	String uid=loginDownContent.getString(LoginDown.CONTENT_UID);
+		        	    	
+		        	    	JSONObject userInfo=new JSONObject();
+		        	    	userInfo.put(PullUserInfoDown.DUID, GenIDs.getDUID(WebClientActivity.getWebClientActivity().getBaseContext()));
+		        	    	userInfo.put(PullUserInfoDown.TOKEN, token);
+		        	    	userInfo.put(PullUserInfoDown.TYPE, 64);
+		        	    	userInfo.put(PullUserInfoDown.VERSION, "0.5.4.140424");
+		        	    	JSONObject userInfoContent=new JSONObject();
+		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_UID, uid);
+		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_BIRTHDAY,"");
+		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_NAME, "");
+		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_PHOTO, "");
+		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_SEX, "");
+		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_EMAIL, "");
+		        	    	userInfo.put(PullUserInfoDown.CONTENT,userInfoContent);
+		        	    	
+		        	    	System.out.println("pull user info:"+userInfo.toString());
+		        	    	out = new BufferedOutputStream(connection.getOutputStream());
+		        	    	out.write(userInfo.toString().getBytes());
+		        	    	out.flush();
+		        	    	
+		        	    	int pullUserCode=connection.getResponseCode();
+		        	    	if(pullUserCode==200){
+		        	    		InputStream pullUserIn = new BufferedInputStream(connection.getInputStream());
+				        	    ByteArrayOutputStream pullUserReceive=new ByteArrayOutputStream();;
+				        	    
+				        	    byte[] userData = new byte[1024];
+				        	    int userLen=-1;
+				        	    while((userLen=in.read(userData))!=-1){
+				        	    	pullUserReceive.write(userData, 0, userLen);
+				        	    }
+				        	    pullUserReceive.close();
+				        	    pullUserIn.close();
+				        	    System.out.println(pullUserReceive.toString());
+		        	    	}
+		        	    }else{
+		        	    	JSONObject errorMessage=loginDown.getJSONObject("error");
+		        	    	int errorCode=errorMessage.getInt(ErrorMessage.CODE);
+		        	    	String errorDescription=errorMessage.getString(ErrorMessage.DESCRIPTION);		        	    	
+		        	    }
 	                 }  
 	        		connection.disconnect();
 	        		System.out.println("connection.disconnect()");
