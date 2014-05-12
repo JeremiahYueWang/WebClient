@@ -5,6 +5,9 @@ import java.net.*;
 
 import com.example.protocol.*;
 
+import org.apache.http.client.*;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,21 +90,27 @@ public class WebClientActivity extends Activity {
 	        if(networkInfo != null && networkInfo.isConnected()){
 	        	// fetch data\
 	        	String url_path="http://www.jiananhuaxia.com/a/ios/user/";
+	        	
+//	        	try{
+//		        	HttpClient httpclient = new DefaultHttpClient();   
+//		        	HttpPost httpReqest = new HttpPost(url_path);
+//		        	
+//		        	
+//	        	}catch(Exception e){
+//	        		e.printStackTrace();
+//	        	}
+	        	
+	        	
 	        	try {	        
 	        		URL url = new URL(url_path);
 	        		HttpURLConnection connection = (HttpURLConnection) url.openConnection();		
 	        		connection.setConnectTimeout(3000); // 请求超时时间3s 
-	        		connection.setRequestMethod("POST");
+	        		connection.setRequestMethod("GET");
 	        		connection.setDoInput(true);
 	        		connection.setDoOutput(true);
-	        	    connection.setChunkedStreamingMode(0);
-	        	    //connection.setRequestProperty("Content-Length", "0");
-	        	   // connection.setRequestProperty("Content-type", "application/json");
+	        	    //connection.setChunkedStreamingMode(0);
 	        	    
-	        	    connection.connect();
 
-	        	    OutputStream out = new BufferedOutputStream(connection.getOutputStream());
-	        	    
 	        	    JSONObject login=new JSONObject();
 	        	    login.put(LoginUp.DUID, "BB6D8252-3321-46C5-A077-74EE33246211");
 	        	    login.put(LoginUp.TYPE, 61);
@@ -113,6 +122,17 @@ public class WebClientActivity extends Activity {
 	        	    login.put(LoginUp.VERSION, "0.5.4.140424");
 	        	    
 	        	    System.out.println("upload data:"+login.toString());
+	        	    
+	        	    
+	        	    connection.setRequestProperty("Transfer-Encoding","identity");
+	        	    connection.setRequestProperty("Content-Length", login.toString().getBytes().length+"");
+	        	    connection.setRequestProperty("Content-type", "application/json");
+	        	    //connection.setUseCaches(false);
+	        	    //connection.setInstanceFollowRedirects(true);
+	        	    connection.connect();
+
+	        	    OutputStream out = new BufferedOutputStream(connection.getOutputStream());
+	        	    
 	        	    
 	        	    out.write(login.toString().getBytes());
 	        	    out.flush();
@@ -129,12 +149,26 @@ public class WebClientActivity extends Activity {
 		        	    
 		        	    byte[] data = new byte[1024];
 		        	    int len=-1;
-		        	    while((in.read(data))!=-1){
+		        	    while((len=in.read(data))!=-1){
 		        	    	receive.write(data, 0, len);
 		        	    }
 		        	    receive.close();
 		        	    in.close();
+		        	    
 		        	    System.out.println(receive.toString());
+		        	    
+		        	    JSONObject loginDown=new JSONObject(receive.toString());
+		        	    JSONObject loginDownContent=loginDown.getJSONObject(LoginDown.CONTENT);
+		        	    String uid=loginDownContent.getString(LoginDown.CONTENT_UID);
+		        	    String token=loginDown.getString(LoginDown.TOKEN);
+		        	    String type=loginDown.getString(LoginDown.TYPE);
+		        	    String success=loginDown.getString(LoginDown.SUCCESS);
+		        	    String duid=loginDown.getString(LoginDown.DUID);
+		        	    System.out.println("duid:"+duid);
+		        	    System.out.println("type:"+type);
+		        	    System.out.println("success:"+success);
+		        	    System.out.println("token:"+token);
+		        	    System.out.println("content: uid:"+uid);
 	                 }  
 	        		connection.disconnect();
 	        		System.out.println("connection.disconnect()");
