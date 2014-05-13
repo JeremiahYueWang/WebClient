@@ -41,6 +41,7 @@ public class WebClientActivity extends Activity {
         etUserName=(EditText) this.findViewById(R.id.etUserName);
         etPassWord=(EditText) this.findViewById(R.id.etPassWord);
         btnEnter=(Button) this.findViewById(R.id.btnEnter);
+        tvHello=(TextView) this.findViewById(R.id.tvHello);
         
         btnEnter.setOnClickListener(new View.OnClickListener() {
 			
@@ -65,13 +66,48 @@ public class WebClientActivity extends Activity {
                     .commit();
         }
         
+    }
+    
+    
+    
+    /*
+     * public Bitmap stringtoBitmap(String string) {
+                // 将字符串转换成Bitmap类型
+                Bitmap bitmap = null;
+                try {
+                        byte[] bitmapArray;
+                        bitmapArray = Base64.decode(string, Base64.DEFAULT);
+                        bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
+                                        bitmapArray.length);
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
 
-        
+                return bitmap;
+        }
+
+        public String bitmaptoString(Bitmap bitmap) {
+
+                // 将Bitmap转换成字符串
+                String string = null;
+                ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+                bitmap.compress(CompressFormat.PNG, 100, bStream);
+                byte[] bytes = bStream.toByteArray();
+                string = Base64.encodeToString(bytes, Base64.DEFAULT);
+                return string;
+        } 
+     * */
+    
+    
+    
+    public void showMessage(String text){
+    	this.tvHello.setText(text);
     }
     
     private EditText etUserName;
     private EditText etPassWord;
     private Button btnEnter;
+    private TextView tvHello;
     public static WebClientActivity webClientActivity=null;
     static public WebClientActivity getWebClientActivity(){
     	return webClientActivity;
@@ -92,17 +128,20 @@ public class WebClientActivity extends Activity {
 	        if(networkInfo != null && networkInfo.isConnected()){
 	        	// fetch data\
 	        	String url_path="http://www.jiananhuaxia.com/a/ios/user/";
-
+	        	URL url =null;
+	        	String uid="";
+	        	String token="";
+	        	boolean success=false;
+	        	HttpURLConnection connection=null;
+	        	OutputStream out=null;
 	        	
-	        	
-	        	try {	        
-	        		URL url = new URL(url_path);
-	        		HttpURLConnection connection = (HttpURLConnection) url.openConnection();		
+	        	try {
+	        		url= new URL(url_path);
+	        		connection = (HttpURLConnection) url.openConnection();		
 	        		connection.setConnectTimeout(3000); // 请求超时时间3s 
-	        		connection.setRequestMethod("POST");
+	        		connection.setRequestMethod("GET");
 	        		connection.setDoInput(true);
 	        		connection.setDoOutput(true);
-	        	    //connection.setChunkedStreamingMode(0);
 	        	    
 
 	        	    JSONObject login=new JSONObject();
@@ -126,7 +165,7 @@ public class WebClientActivity extends Activity {
 	        	    //connection.setInstanceFollowRedirects(true);
 	        	    connection.connect();
 
-	        	    OutputStream out = new BufferedOutputStream(connection.getOutputStream());
+	        	    out = new BufferedOutputStream(connection.getOutputStream());
 	        	    
 	        	    
 	        	    out.write(login.toString().getBytes());
@@ -153,47 +192,14 @@ public class WebClientActivity extends Activity {
 		        	    System.out.println(receive.toString());
 		        	    
 		        	    JSONObject loginDown=new JSONObject(receive.toString());
-		        	    String token=loginDown.getString(LoginDown.TOKEN);
+		        	    token=loginDown.getString(LoginDown.TOKEN);
 		        	    String type=loginDown.getString(LoginDown.TYPE);
 		        	    String duid=loginDown.getString(LoginDown.DUID);
-		        	    boolean success=loginDown.getBoolean(LoginDown.SUCCESS);
+		        	    success=loginDown.getBoolean(LoginDown.SUCCESS);
 		        	    if(success){
 		        	    	JSONObject loginDownContent=loginDown.getJSONObject(LoginDown.CONTENT);
-		        	    	String uid=loginDownContent.getString(LoginDown.CONTENT_UID);
+		        	    	uid=loginDownContent.getString(LoginDown.CONTENT_UID);
 		        	    	
-		        	    	JSONObject userInfo=new JSONObject();
-		        	    	userInfo.put(PullUserInfoDown.DUID, GenIDs.getDUID(WebClientActivity.getWebClientActivity().getBaseContext()));
-		        	    	userInfo.put(PullUserInfoDown.TOKEN, token);
-		        	    	userInfo.put(PullUserInfoDown.TYPE, 64);
-		        	    	userInfo.put(PullUserInfoDown.VERSION, "0.5.4.140424");
-		        	    	JSONObject userInfoContent=new JSONObject();
-		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_UID, uid);
-		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_BIRTHDAY,"");
-		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_NAME, "");
-		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_PHOTO, "");
-		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_SEX, "");
-		        	    	userInfoContent.put(PullUserInfoDown.CONTENT_EMAIL, "");
-		        	    	userInfo.put(PullUserInfoDown.CONTENT,userInfoContent);
-		        	    	
-		        	    	System.out.println("pull user info:"+userInfo.toString());
-		        	    	out = new BufferedOutputStream(connection.getOutputStream());
-		        	    	out.write(userInfo.toString().getBytes());
-		        	    	out.flush();
-		        	    	
-		        	    	int pullUserCode=connection.getResponseCode();
-		        	    	if(pullUserCode==200){
-		        	    		InputStream pullUserIn = new BufferedInputStream(connection.getInputStream());
-				        	    ByteArrayOutputStream pullUserReceive=new ByteArrayOutputStream();;
-				        	    
-				        	    byte[] userData = new byte[1024];
-				        	    int userLen=-1;
-				        	    while((userLen=in.read(userData))!=-1){
-				        	    	pullUserReceive.write(userData, 0, userLen);
-				        	    }
-				        	    pullUserReceive.close();
-				        	    pullUserIn.close();
-				        	    System.out.println(pullUserReceive.toString());
-		        	    	}
 		        	    }else{
 		        	    	JSONObject errorMessage=loginDown.getJSONObject("error");
 		        	    	int errorCode=errorMessage.getInt(ErrorMessage.CODE);
@@ -204,9 +210,74 @@ public class WebClientActivity extends Activity {
 	        		System.out.println("connection.disconnect()");
 	            } catch (Exception e) {  
 	                 // TODO: handle exception  
+	            	//WebClientActivity.getWebClientActivity().showMessage("Error:\n"+e.toString());
 	            	e.printStackTrace();
 	            }finally{
-	            	//connection.disconnect();
+	            	connection.disconnect();
+	            }
+	        	
+	        	/////////////////// 获取用户信息 ////////////////////////
+	        	if(success){	//获得uid, token
+	        		
+	        	}
+	        	// 下载用户信息
+	        	try{
+	        		url= new URL(url_path);
+	        		connection = (HttpURLConnection) url.openConnection();		
+	        		connection.setConnectTimeout(3000); // 请求超时时间3s 
+	        		connection.setRequestMethod("GET");
+	        		connection.setDoInput(true);
+	        		connection.setDoOutput(true);
+	        		
+	    	    	JSONObject userInfo=new JSONObject();
+	    	    	userInfo.put(PullUserInfoDown.DUID, GenIDs.getDUID(WebClientActivity.getWebClientActivity().getBaseContext()));
+	    	    	userInfo.put(PullUserInfoDown.TOKEN, token);
+	    	    	userInfo.put(PullUserInfoDown.TYPE, 64);
+	    	    	userInfo.put(PullUserInfoDown.VERSION, "0.5.4.140424");
+	    	    	JSONObject userInfoContent=new JSONObject();
+	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_UID, uid);
+	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_BIRTHDAY,"");
+	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_NAME, "");
+	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_PHOTO, "");
+	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_SEX, "");
+	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_EMAIL, "");
+	    	    	userInfo.put(PullUserInfoDown.CONTENT,userInfoContent);
+	    	    	
+	    	    	System.out.println("pull user info:"+userInfo.toString());
+	    	    	connection.setRequestProperty("Transfer-Encoding","identity");
+		        	connection.setRequestProperty("Content-Length", userInfo.toString().getBytes().length+"");
+		        	connection.setRequestProperty("Content-type", "application/json");
+		        	connection.setRequestProperty("Connection", "keep-alive");
+	    	    	
+	    	    	
+	    	    	out = new BufferedOutputStream(connection.getOutputStream());
+	    	    	out.write(userInfo.toString().getBytes());
+	    	    	out.flush();
+	    	    	
+	    	    	int pullUserCode=connection.getResponseCode();
+	    	    	if(pullUserCode==200){
+	    	    		InputStream pullUserIn = new BufferedInputStream(connection.getInputStream());
+		        	    ByteArrayOutputStream pullUserReceive=new ByteArrayOutputStream();;
+		        	    
+		        	    byte[] userData = new byte[1024];
+		        	    int userLen=-1;
+		        	    while((userLen=pullUserIn.read(userData))!=-1){
+		        	    	pullUserReceive.write(userData, 0, userLen);
+		        	    }
+		        	    pullUserReceive.close();
+		        	    pullUserIn.close();
+		        	    System.out.println(pullUserReceive.toString());
+		        	    JSONObject user=new JSONObject(pullUserReceive.toString());
+		        	    System.out.println(user.getJSONObject(PullUserInfoDown.CONTENT).getString(PullUserInfoDown.CONTENT_EMAIL));
+		        	    //WebClientActivity.getWebClientActivity().showMessage(user.getJSONObject(PullUserInfoDown.CONTENT).getString(PullUserInfoDown.CONTENT_EMAIL));
+		        	    connection.disconnect();
+		        	    System.out.println("get user info end!");
+	    	    	}
+	        	}catch(Exception e){	        		  
+	            	WebClientActivity.getWebClientActivity().showMessage("Error:\n"+e.toString());
+	        		e.printStackTrace();
+	        	}finally{
+	            	connection.disconnect();
 	            }
 	        	
 	        }else{
