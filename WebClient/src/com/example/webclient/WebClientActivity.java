@@ -5,6 +5,7 @@ import java.net.*;
 
 import javax.security.auth.login.LoginException;
 
+import com.example.model.UserInfo;
 import com.example.protocol.*;
 
 import org.apache.http.client.*;
@@ -15,11 +16,16 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,10 +34,38 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.os.Build;
 
-public class WebClientActivity extends Activity {
+public class WebClientActivity extends Activity implements WaitingForResult {
+
+    static boolean isLogedIn = false;
+
 	public WebClientActivity(){
 		this.webClientActivity=this;
 	}
+
+    private ProgressBar progressBar;
+    private String user = "";
+
+    private String url_str = "http://www.jiananhuaxia.com/a/ios/user/";
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+    }
+
+    private boolean isLogedIn(){
+        try {
+            FileInputStream fis = this.getBaseContext().openFileInput(Config.USERINFOFILE);
+            int length = fis.available();
+            System.out.println("文件存在！"+length);
+            if(length==0){
+                return false;
+            }
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,64 +76,218 @@ public class WebClientActivity extends Activity {
         etPassWord=(EditText) this.findViewById(R.id.etPassWord);
         btnEnter=(Button) this.findViewById(R.id.btnEnter);
         tvHello=(TextView) this.findViewById(R.id.tvHello);
-        
+        progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+
+        System.out.println("widthPixels:"+dm.widthPixels+"\ndensity:"+dm.density+"\ndensityDpi:"+dm.densityDpi+"\nscaledDensity:"+dm.scaledDensity+"\nxdpi:"+dm.xdpi);
+
+        if(isLogedIn()){
+            Intent intent = new Intent(this, ShowUserInfo.class);
+            intent.putExtra("islogedin", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+
         btnEnter.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				String userName=etUserName.getText().toString().trim();
-				String password=etPassWord.getText().toString().trim();
-				
-				System.out.println(userName+" "+password);
-				new DownloadWebpageTask().execute();
-				System.out.println("main thread end!!");
-			}
-		});
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                user = etUserName.getText().toString();
+                btnEnter.setEnabled(false);
+                progressBar.setVisibility(ProgressBar.VISIBLE);
+                loginP();
+            }
+        });
         
-        //GenIDs.getDeviceToken(this.getBaseContext());
-       // GenIDs.getDUID(this.getBaseContext());
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+
         }
         
     }
-    
-    
-    
-    /*
-     * public Bitmap stringtoBitmap(String string) {
-                // 将字符串转换成Bitmap类型
-                Bitmap bitmap = null;
-                try {
-                        byte[] bitmapArray;
-                        bitmapArray = Base64.decode(string, Base64.DEFAULT);
-                        bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
-                                        bitmapArray.length);
-                } catch (Exception e) {
-                        e.printStackTrace();
-                }
 
-                return bitmap;
+    private void loginP(){
+        String userName=etUserName.getText().toString().trim();
+        String password=etPassWord.getText().toString().trim();
+
+        System.out.println(userName+" "+password);
+
+        JSONObject login=null;
+        try {
+
+            login = new JSONObject();
+            login.put(LoginUp.DUID, "BB6D8252-3321-46C5-A077-74EE33246211");
+            login.put(LoginUp.TYPE, 61);
+            JSONObject logincontent = new JSONObject();
+            logincontent.put(LoginUp.CONTENT_DEVICETOKEN, GenIDs.getDeviceToken(WebClientActivity.getWebClientActivity().getBaseContext()));
+            logincontent.put(LoginUp.CONTENT_USERNAME, userName);
+            logincontent.put(LoginUp.CONTENT_PASSWORD, password);
+            login.put(LoginUp.CONTENT, logincontent);
+            login.put(LoginUp.VERSION, "0.5.4.140424");
+
+            ByteArrayOutputStream receive=new ByteArrayOutputStream();
+            new HttpUtil(url_str, login.toString(), WebClientActivity.getWebClientActivity()).execute();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            //显示一个警告框
         }
 
-        public String bitmaptoString(Bitmap bitmap) {
+        //new DownloadWebpageTask().execute();
+        System.out.println("main thread end!!");
+    }
 
-                // 将Bitmap转换成字符串
-                String string = null;
-                ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-                bitmap.compress(CompressFormat.PNG, 100, bStream);
-                byte[] bytes = bStream.toByteArray();
-                string = Base64.encodeToString(bytes, Base64.DEFAULT);
-                return string;
-        } 
-     * */
-    
-    
-    
+    public void doSomeThingOnResult(String result){
+
+        System.out.println("in WebClientActivityresult:"+result);
+        Boolean success = false;
+        try {
+            JSONObject down = new JSONObject(result);
+            int type = down.getInt(LoginDown.TYPE);
+            String duid = down.getString(LoginDown.DUID);
+            success = down.getBoolean(LoginDown.SUCCESS);
+            String token = null;
+            String uid = null;
+            if(type == 61) {
+                if (success) {    // 开始获取用户信息
+
+                    token = down.getString(LoginDown.TOKEN);
+                    JSONObject loginDownContent = down.getJSONObject(LoginDown.CONTENT);
+                    uid = loginDownContent.getString(LoginDown.CONTENT_UID);
+
+                    pullUserInfo(token, uid);
+
+                } else {
+                    JSONObject errorMessage = down.getJSONObject("error");
+                    int errorCode = errorMessage.getInt(ErrorMessage.CODE);
+                    String errorDescription = errorMessage.getString(ErrorMessage.DESCRIPTION);
+                    //显示一个对话框是否重新连接
+                    Toast.makeText(this, errorDescription, 1000).show();
+                    reEnter();  //重新可以输入
+                    System.out.println(errorDescription);
+
+                }
+            }else if(type == 64){
+                if (success){
+                    try{
+                        JSONObject userInfo = new JSONObject(result);
+                        String duidDown = userInfo.getString(PullUserInfoDown.DUID);
+                        String tokenDown = userInfo.getString(PullUserInfoDown.TOKEN);
+                        int typeDown = userInfo.getInt(PullUserInfoDown.TYPE);
+                        boolean userInfoSuccess = userInfo.getBoolean(PullUserInfoDown.SUCCESS);
+                        if(userInfoSuccess){
+                            JSONObject userInfoContent = userInfo.getJSONObject(PullUserInfoDown.CONTENT);
+                            String uidDown = userInfoContent.getString(PullUserInfoDown.CONTENT_UID);
+                            String name = userInfoContent.getString(PullUserInfoDown.CONTENT_NAME);
+                            String sex = userInfoContent.getInt(PullUserInfoDown.CONTENT_SEX)==1?"男":"女";
+                            String birthday = userInfoContent.getString(PullUserInfoDown.CONTENT_BIRTHDAY);
+                            String email = userInfoContent.getString(PullUserInfoDown.CONTENT_EMAIL);
+                            String photo = userInfoContent.getString(PullUserInfoDown.CONTENT_PHOTO);
+
+                            Intent intent = new Intent(WebClientActivity.this, ShowUserInfo.class);
+                            intent.putExtra(PullUserInfoDown.CONTENT_NAME,name);
+                            intent.putExtra(PullUserInfoDown.CONTENT_SEX, sex);
+                            intent.putExtra(PullUserInfoDown.CONTENT_BIRTHDAY, birthday);
+                            intent.putExtra(PullUserInfoDown.CONTENT_EMAIL, email);
+                            intent.putExtra(PullUserInfoDown.CONTENT_PHOTO, photo);
+                            intent.putExtra(PullUserInfoDown.CONTENT_UID, uidDown);
+                            intent.putExtra("user", user);
+                            intent.putExtra("islogedin", false);
+
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+
+                        } else {
+                            //  重新获取一次
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                } else {
+
+                    pullUserInfo(token, uid);
+
+                }
+            }
+        } catch (JSONException e){
+
+            Toast.makeText(this, "网络连接问题！", 1000).show();
+
+            reEnter();
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void reEnter(){
+
+        btnEnter.setEnabled(true);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
+
+    }
+
+    private void pullUserInfo(String token, String uid){
+
+        try {
+            JSONObject userInfo = new JSONObject();
+            userInfo.put(PullUserInfoDown.DUID, GenIDs.getDUID(WebClientActivity.getWebClientActivity().getBaseContext()));
+            userInfo.put(PullUserInfoDown.TOKEN, token);
+            userInfo.put(PullUserInfoDown.TYPE, 64);
+            userInfo.put(PullUserInfoDown.VERSION, "0.5.4.140424");
+            JSONObject userInfoContent = new JSONObject();
+            userInfoContent.put(PullUserInfoDown.CONTENT_UID, uid);
+            userInfoContent.put(PullUserInfoDown.CONTENT_BIRTHDAY, "");
+            userInfoContent.put(PullUserInfoDown.CONTENT_NAME, "");
+            userInfoContent.put(PullUserInfoDown.CONTENT_PHOTO, "");
+            userInfoContent.put(PullUserInfoDown.CONTENT_SEX, "");
+            userInfoContent.put(PullUserInfoDown.CONTENT_EMAIL, "");
+            userInfo.put(PullUserInfoDown.CONTENT, userInfoContent);
+
+            new HttpUtil(url_str, userInfo.toString(), this).execute();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void doSomeThingOnResultOld(String result){
+
+        System.out.println("in WebClientActivityresult:"+result);
+        Boolean success = false;
+        try {
+            JSONObject loginDown = new JSONObject(result);
+            String token = loginDown.getString(LoginDown.TOKEN);
+            String type = loginDown.getString(LoginDown.TYPE);
+            String duid = loginDown.getString(LoginDown.DUID);
+            success = loginDown.getBoolean(LoginDown.SUCCESS);
+            if (success) {    // 开始一个新的intent
+                JSONObject loginDownContent = loginDown.getJSONObject(LoginDown.CONTENT);
+                String uid = loginDownContent.getString(LoginDown.CONTENT_UID);
+                Intent intent = new Intent(WebClientActivity.this, ShowUserInfo.class);
+                intent.putExtra(PullUserInfoUp.CONTENT_UID, uid);
+                intent.putExtra(PullUserInfoUp.TOKEN, token);
+                startActivity(intent);
+
+            } else {
+                JSONObject errorMessage = loginDown.getJSONObject("error");
+                int errorCode = errorMessage.getInt(ErrorMessage.CODE);
+                String errorDescription = errorMessage.getString(ErrorMessage.DESCRIPTION);
+                //显示一个对话框是否重新连接
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
     public void showMessage(String text){
     	this.tvHello.setText(text);
     }
@@ -109,207 +297,10 @@ public class WebClientActivity extends Activity {
     private Button btnEnter;
     private TextView tvHello;
     public static WebClientActivity webClientActivity=null;
+
     static public WebClientActivity getWebClientActivity(){
     	return webClientActivity;
     }
-    
-    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
-
-//    	public void execute(){
-//    		doInBackground();
-//    	}
-    	
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-			
-	        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-	        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-	        if(networkInfo != null && networkInfo.isConnected()){
-	        	// fetch data\
-	        	String url_path="http://www.jiananhuaxia.com/a/ios/user/";
-	        	URL url =null;
-	        	String uid="";
-	        	String token="";
-	        	boolean success=false;
-	        	HttpURLConnection connection=null;
-	        	OutputStream out=null;
-	        	
-	        	try {
-	        		url= new URL(url_path);
-	        		connection = (HttpURLConnection) url.openConnection();		
-	        		connection.setConnectTimeout(3000); // 请求超时时间3s 
-	        		connection.setRequestMethod("GET");
-	        		connection.setDoInput(true);
-	        		connection.setDoOutput(true);
-	        	    
-
-	        	    JSONObject login=new JSONObject();
-	        	    login.put(LoginUp.DUID, "BB6D8252-3321-46C5-A077-74EE33246211");
-	        	    login.put(LoginUp.TYPE, 61);
-	        	    JSONObject logincontent=new JSONObject();
-	        	    logincontent.put(LoginUp.CONTENT_DEVICETOKEN, GenIDs.getDeviceToken(WebClientActivity.getWebClientActivity().getBaseContext()));
-	        	    logincontent.put(LoginUp.CONTENT_USERNAME, "Magical");
-	        	    logincontent.put(LoginUp.CONTENT_PASSWORD, "123456");
-	        	    login.put(LoginUp.CONTENT, logincontent);
-	        	    login.put(LoginUp.VERSION, "0.5.4.140424");
-	        	    
-	        	    System.out.println("upload data:"+login.toString());
-	        	    
-	        	    
-	        	    connection.setRequestProperty("Transfer-Encoding","identity");
-	        	    connection.setRequestProperty("Content-Length", login.toString().getBytes().length+"");
-	        	    connection.setRequestProperty("Content-type", "application/json");
-	        	    connection.setRequestProperty("Connection", "keep-alive");
-	        	    //connection.setUseCaches(false);
-	        	    //connection.setInstanceFollowRedirects(true);
-	        	    connection.connect();
-
-	        	    out = new BufferedOutputStream(connection.getOutputStream());
-	        	    
-	        	    
-	        	    out.write(login.toString().getBytes());
-	        	    out.flush();
-	        	    //out.close();
-	        	    //
-	        	    
-	        		int code = connection.getResponseCode(); // 返回状态码  
-	        		System.out.println("responsecode:"+code);
-	        		if (code == 200) { 
-	        			// 或得到输入流，此时流里面已经包含了服务端返回回来的JSON数据了,此时需要将这个流转换成字符串  
-
-		        	    InputStream in = new BufferedInputStream(connection.getInputStream());
-		        	    ByteArrayOutputStream receive=new ByteArrayOutputStream();;
-		        	    
-		        	    byte[] data = new byte[1024];
-		        	    int len=-1;
-		        	    while((len=in.read(data))!=-1){
-		        	    	receive.write(data, 0, len);
-		        	    }
-		        	    receive.close();
-		        	    in.close();
-		        	    
-		        	    System.out.println(receive.toString());
-		        	    
-		        	    JSONObject loginDown=new JSONObject(receive.toString());
-		        	    token=loginDown.getString(LoginDown.TOKEN);
-		        	    String type=loginDown.getString(LoginDown.TYPE);
-		        	    String duid=loginDown.getString(LoginDown.DUID);
-		        	    success=loginDown.getBoolean(LoginDown.SUCCESS);
-		        	    if(success){
-		        	    	JSONObject loginDownContent=loginDown.getJSONObject(LoginDown.CONTENT);
-		        	    	uid=loginDownContent.getString(LoginDown.CONTENT_UID);
-		        	    	
-		        	    }else{
-		        	    	JSONObject errorMessage=loginDown.getJSONObject("error");
-		        	    	int errorCode=errorMessage.getInt(ErrorMessage.CODE);
-		        	    	String errorDescription=errorMessage.getString(ErrorMessage.DESCRIPTION);		        	    	
-		        	    }
-	                 }  
-	        		connection.disconnect();
-	        		System.out.println("connection.disconnect()");
-	            } catch (Exception e) {  
-	                 // TODO: handle exception  
-	            	//WebClientActivity.getWebClientActivity().showMessage("Error:\n"+e.toString());
-	            	e.printStackTrace();
-	            }finally{
-	            	connection.disconnect();
-	            }
-	        	
-	        	/////////////////// 获取用户信息 ////////////////////////
-	        	if(success){	//获得uid, token
-	        		
-	        	}
-	        	// 下载用户信息
-	        	try{
-	        		url= new URL(url_path);
-	        		connection = (HttpURLConnection) url.openConnection();		
-	        		connection.setConnectTimeout(3000); // 请求超时时间3s 
-	        		connection.setRequestMethod("GET");
-	        		connection.setDoInput(true);
-	        		connection.setDoOutput(true);
-	        		
-	    	    	JSONObject userInfo=new JSONObject();
-	    	    	userInfo.put(PullUserInfoDown.DUID, GenIDs.getDUID(WebClientActivity.getWebClientActivity().getBaseContext()));
-	    	    	userInfo.put(PullUserInfoDown.TOKEN, token);
-	    	    	userInfo.put(PullUserInfoDown.TYPE, 64);
-	    	    	userInfo.put(PullUserInfoDown.VERSION, "0.5.4.140424");
-	    	    	JSONObject userInfoContent=new JSONObject();
-	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_UID, uid);
-	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_BIRTHDAY,"");
-	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_NAME, "");
-	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_PHOTO, "");
-	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_SEX, "");
-	    	    	userInfoContent.put(PullUserInfoDown.CONTENT_EMAIL, "");
-	    	    	userInfo.put(PullUserInfoDown.CONTENT,userInfoContent);
-	    	    	
-	    	    	System.out.println("pull user info:"+userInfo.toString());
-	    	    	connection.setRequestProperty("Transfer-Encoding","identity");
-		        	connection.setRequestProperty("Content-Length", userInfo.toString().getBytes().length+"");
-		        	connection.setRequestProperty("Content-type", "application/json");
-		        	connection.setRequestProperty("Connection", "keep-alive");
-	    	    	
-	    	    	
-	    	    	out = new BufferedOutputStream(connection.getOutputStream());
-	    	    	out.write(userInfo.toString().getBytes());
-	    	    	out.flush();
-	    	    	
-	    	    	int pullUserCode=connection.getResponseCode();
-	    	    	if(pullUserCode==200){
-	    	    		InputStream pullUserIn = new BufferedInputStream(connection.getInputStream());
-		        	    ByteArrayOutputStream pullUserReceive=new ByteArrayOutputStream();;
-		        	    
-		        	    byte[] userData = new byte[1024];
-		        	    int userLen=-1;
-		        	    while((userLen=pullUserIn.read(userData))!=-1){
-		        	    	pullUserReceive.write(userData, 0, userLen);
-		        	    }
-		        	    pullUserReceive.close();
-		        	    pullUserIn.close();
-		        	    System.out.println(pullUserReceive.toString());
-		        	    JSONObject user=new JSONObject(pullUserReceive.toString());
-		        	    System.out.println(user.getJSONObject(PullUserInfoDown.CONTENT).getString(PullUserInfoDown.CONTENT_EMAIL));
-		        	    //WebClientActivity.getWebClientActivity().showMessage(user.getJSONObject(PullUserInfoDown.CONTENT).getString(PullUserInfoDown.CONTENT_EMAIL));
-		        	    connection.disconnect();
-		        	    System.out.println("get user info end!");
-	    	    	}
-	        	}catch(Exception e){	        		  
-	            	WebClientActivity.getWebClientActivity().showMessage("Error:\n"+e.toString());
-	        		e.printStackTrace();
-	        	}finally{
-	            	connection.disconnect();
-	            }
-	        	
-	        }else{
-	        	// display error
-	        }
-			
-			return null;
-		}
-		
-		private void logInProcess(){
-			
-			JSONObject logIn=new JSONObject();
-			try {
-				logIn.put("duid", getDuid());
-				logIn.put("type", 61);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-    	
-    }
-    private String duid="sss";	//每次通信唯一标识，通信标识码，客户端生成
-    
-    private String getDuid(){
-    	return duid;
-    }
-    private void genDuid(){
-    	duid="hello, this is a test";
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -319,32 +310,20 @@ public class WebClientActivity extends Activity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_quit) {
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
 
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_web_client, container, false);
-            return rootView;
-        }
-    }
 
 }
