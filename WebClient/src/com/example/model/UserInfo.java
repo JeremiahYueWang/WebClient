@@ -81,7 +81,6 @@ public class UserInfo {
         SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-mm-dd");
         try {
             birthday = dateFormater.parse(s);
-            System.out.println("user info:"+birthday.toString());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -127,7 +126,7 @@ public class UserInfo {
             userInfo.put("email", getEmail());
             userInfo.put("photo", ImageUtil.bitmapToString(getPhoto()));
             result = userInfo.toString();
-            System.out.println("in UserInfo:"+result);
+
         }catch (Exception e){
             e.printStackTrace();
         }
