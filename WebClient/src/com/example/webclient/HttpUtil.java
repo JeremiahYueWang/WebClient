@@ -66,7 +66,6 @@ public class HttpUtil extends AsyncTask<String, Integer, String>{
             out.close();
 
             int code = connection.getResponseCode(); // 返回状态码
-            System.out.println("responsecode:"+code);
             if (code == 200) {
                 // 或得到输入流，此时流里面已经包含了服务端返回回来的JSON数据了,此时需要将这个流转换成字符串
 
@@ -80,7 +79,7 @@ public class HttpUtil extends AsyncTask<String, Integer, String>{
                 }
                 result=o.toString();
                 in.close();
-                System.out.println("in HttpUtil.doInBackground:"+result);
+
             }
             connection.disconnect();
         } catch (Exception e){

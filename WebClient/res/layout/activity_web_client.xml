@@ -14,15 +14,18 @@
         "
         <TextView
 	        android:id="@+id/tvUserName"
-	        android:layout_width="wrap_content"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
 	        android:text="@string/tvusername" />
 
 	    <EditText
 	        android:id="@+id/etUserName"
-	        android:layout_width="fill_parent"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
 	        android:hint="@string/etusernamehint"
+            android:layout_weight="3"
 	        android:ems="10" >
 	    </EditText>        
         
@@ -35,14 +38,17 @@
 	    
         <TextView
 	        android:id="@+id/tvpassword"
-	        android:layout_width="wrap_content"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
 	        android:text="@string/tvpassword" />
 
 	    <EditText
 	        android:id="@+id/etPassWord"
-	        android:layout_width="fill_parent"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
+            android:layout_weight="3"
 	        android:ems="10"
 	        android:hint="@string/etpasswordhint"
 	        android:inputType="textPassword" >
@@ -54,17 +60,12 @@
     <Button
         android:id="@+id/btnEnter"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center_horizontal"
         android:text="@string/btnenter"
         />
 
-    <TextView
-        android:id="@+id/tvHello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="" />
-
-    <ProgressBar
+       <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"

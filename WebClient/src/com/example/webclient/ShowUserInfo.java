@@ -121,9 +121,9 @@ public class ShowUserInfo extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        System.out.println("menuitem");
         int id = item.getItemId();
         if (id == R.id.action_quit) {
+
             isLogOff = true;
 
             finish();
@@ -142,7 +142,6 @@ public class ShowUserInfo extends Activity {
             byte[] buffer=new byte[length];
             fis.read(buffer);
             String result= EncodingUtils.getString(buffer, "UTF-8");
-            System.out.println("getProfileFromFile:"+result);
             userInfo = new UserInfo(result);
             fis.close();
 
@@ -156,8 +155,19 @@ public class ShowUserInfo extends Activity {
 
         try {
             FileOutputStream fos = this.getBaseContext().openFileOutput(Config.USERINFOFILE, Context.MODE_PRIVATE);
-            System.out.println("saveprofileToFile:"+userInfo.toString());
             fos.write(EncodingUtils.getBytes(userInfo.toString(), "UTF-8"));
+            fos.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void clearProfiletoFile(){
+
+        try {
+            FileOutputStream fos = this.getBaseContext().openFileOutput(Config.USERINFOFILE, Context.MODE_PRIVATE);
+            fos.write(EncodingUtils.getBytes("", "UTF-8"));
             fos.close();
         } catch (Exception e){
             e.printStackTrace();
@@ -173,18 +183,7 @@ public class ShowUserInfo extends Activity {
         if(isLogOff) {  //点退出键了
 
             System.out.println("点退出键");
-            try {
-                FileOutputStream fos = this.getBaseContext().openFileOutput(Config.USERINFOFILE, Context.MODE_PRIVATE);
-                fos.write(EncodingUtils.getBytes("", "UTF-8"));
-                fos.close();
-//
-//                File file = new File(Config.USERINFOFILE);
-//                if (file.exists()) {
-//                    System.out.println("delete"+file.delete());
-//                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+            clearProfiletoFile();
 
         }else{
 

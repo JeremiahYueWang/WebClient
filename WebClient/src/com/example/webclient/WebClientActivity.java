@@ -55,13 +55,15 @@ public class WebClientActivity extends Activity implements WaitingForResult {
 
     private boolean isLogedIn(){
         try {
+
             FileInputStream fis = this.getBaseContext().openFileInput(Config.USERINFOFILE);
             int length = fis.available();
-            System.out.println("文件存在！"+length);
+            System.out.println("找到文件："+length);
             if(length==0){
                 return false;
             }
             return true;
+
         }catch (Exception e){
             return false;
         }
@@ -75,12 +77,11 @@ public class WebClientActivity extends Activity implements WaitingForResult {
         etUserName=(EditText) this.findViewById(R.id.etUserName);
         etPassWord=(EditText) this.findViewById(R.id.etPassWord);
         btnEnter=(Button) this.findViewById(R.id.btnEnter);
-        tvHello=(TextView) this.findViewById(R.id.tvHello);
         progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
 
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
-        System.out.println("widthPixels:"+dm.widthPixels+"\ndensity:"+dm.density+"\ndensityDpi:"+dm.densityDpi+"\nscaledDensity:"+dm.scaledDensity+"\nxdpi:"+dm.xdpi);
+        //System.out.println("widthPixels:"+dm.widthPixels+"\ndensity:"+dm.density+"\ndensityDpi:"+dm.densityDpi+"\nscaledDensity:"+dm.scaledDensity+"\nxdpi:"+dm.xdpi);
 
         if(isLogedIn()){
             Intent intent = new Intent(this, ShowUserInfo.class);
@@ -113,8 +114,6 @@ public class WebClientActivity extends Activity implements WaitingForResult {
         String userName=etUserName.getText().toString().trim();
         String password=etPassWord.getText().toString().trim();
 
-        System.out.println(userName+" "+password);
-
         JSONObject login=null;
         try {
 
@@ -136,13 +135,10 @@ public class WebClientActivity extends Activity implements WaitingForResult {
             //显示一个警告框
         }
 
-        //new DownloadWebpageTask().execute();
-        System.out.println("main thread end!!");
     }
 
     public void doSomeThingOnResult(String result){
 
-        System.out.println("in WebClientActivityresult:"+result);
         Boolean success = false;
         try {
             JSONObject down = new JSONObject(result);
@@ -167,7 +163,6 @@ public class WebClientActivity extends Activity implements WaitingForResult {
                     //显示一个对话框是否重新连接
                     Toast.makeText(this, errorDescription, 1000).show();
                     reEnter();  //重新可以输入
-                    System.out.println(errorDescription);
 
                 }
             }else if(type == 64){
@@ -260,7 +255,6 @@ public class WebClientActivity extends Activity implements WaitingForResult {
 
     public void doSomeThingOnResultOld(String result){
 
-        System.out.println("in WebClientActivityresult:"+result);
         Boolean success = false;
         try {
             JSONObject loginDown = new JSONObject(result);

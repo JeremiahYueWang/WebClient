@@ -73,16 +73,14 @@ public class GenIDs extends Activity {
 			}   // hex string to uppercase   
 			m_szUniqueID = m_szUniqueID.toUpperCase();
 			
-			m_szUniqueID="ebce4dbfe994ce101a71b61def1e3b92cb28a8eae9da53f3085ee1427298854e";
-			
 			deviceToken=m_szUniqueID;
 		}
-		System.out.println("device tokens:s"+deviceToken);
+
 		return deviceToken;
 		
 	}
 	
-	public static String getDUID(Context context){	//利用deviceToken和发起通讯当前时间来生成通信标识
+	public static String getDUID(Context context){	//锟斤拷锟斤拷deviceToken锟酵凤拷锟斤拷通讯锟斤拷前时锟斤拷锟斤拷锟斤拷锟斤拷通锟脚憋拷识
 		String duid="";
 		String m_origen=getDeviceToken(context)+(new Date(System.currentTimeMillis())).toString();
 		
@@ -106,9 +104,8 @@ public class GenIDs extends Activity {
 			duid+=Integer.toHexString(b);
 		}   // hex string to uppercase   
 		duid = duid.toUpperCase();
-		
-		System.out.println("duid:"+duid);
-		return duid;		
+
+		return duid;
 	}
 	
 }
