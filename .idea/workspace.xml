@@ -23,13 +23,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="402d816d-3950-4f89-9afd-ec25f3ded38a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v41.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/dexedLibs1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebClient/src/com/example/webclient/GenIDs.java" afterPath="$PROJECT_DIR$/WebClient/src/com/example/webclient/GenIDs.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebClient/src/com/example/webclient/HttpUtil.java" afterPath="$PROJECT_DIR$/WebClient/src/com/example/webclient/HttpUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebClient/src/com/example/webclient/ShowUserInfo.java" afterPath="$PROJECT_DIR$/WebClient/src/com/example/webclient/ShowUserInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebClient/src/com/example/model/UserInfo.java" afterPath="$PROJECT_DIR$/WebClient/src/com/example/model/UserInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebClient/src/com/example/webclient/WebClientActivity.java" afterPath="$PROJECT_DIR$/WebClient/src/com/example/webclient/WebClientActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebClient/res/layout/activity_web_client.xml" afterPath="$PROJECT_DIR$/WebClient/res/layout/activity_web_client.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -64,24 +57,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_web_client.xml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="activity_web_client.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebClient/res/layout/activity_web_client.xml">
-          <provider editor-type-id="android-designer">
+          <provider selected="true" editor-type-id="android-designer">
             <state />
           </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1054" max-vertical-offset="1394">
-              <caret line="62" column="41" selection-start-line="62" selection-start-column="41" selection-end-line="62" selection-end-column="41" />
+          <provider editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="1462">
+              <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShowUserInfo.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ShowUserInfo.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WebClient/src/com/example/webclient/ShowUserInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36724564" vertical-offset="2300" max-vertical-offset="3128">
-              <caret line="169" column="59" selection-start-line="169" selection-start-column="59" selection-end-line="169" selection-end-column="59" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2300" max-vertical-offset="3128">
+              <caret line="177" column="13" selection-start-line="177" selection-start-column="13" selection-end-line="177" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -162,10 +155,10 @@
         <option value="$PROJECT_DIR$/WebClient/src/com/example/Test.java" />
         <option value="$PROJECT_DIR$/WebClient/src/com/example/model/UserInfo.java" />
         <option value="$PROJECT_DIR$/WebClient/src/com/example/webclient/HttpUtil.java" />
-        <option value="$PROJECT_DIR$/WebClient/res/layout/activity_web_client.xml" />
         <option value="$PROJECT_DIR$/WebClient/src/com/example/webclient/WebClientActivity.java" />
         <option value="$PROJECT_DIR$/WebClient/src/com/example/webclient/ShowUserInfo.java" />
         <option value="$PROJECT_DIR$/WebClient/src/com/example/webclient/GenIDs.java" />
+        <option value="$PROJECT_DIR$/WebClient/res/layout/activity_web_client.xml" />
       </list>
     </option>
   </component>
@@ -430,10 +423,11 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329375" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32840723" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41913748" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41913748" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.213125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -445,7 +439,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -840,17 +833,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WebClient/res/layout/activity_web_client.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1054" max-vertical-offset="1394">
-          <caret line="62" column="41" selection-start-line="62" selection-start-column="41" selection-end-line="62" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/WebClient/src/com/example/webclient/WebClientActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4981" max-vertical-offset="5576">
@@ -869,8 +851,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WebClient/src/com/example/webclient/ShowUserInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36724564" vertical-offset="2300" max-vertical-offset="3128">
-          <caret line="169" column="59" selection-start-line="169" selection-start-column="59" selection-end-line="169" selection-end-column="59" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2300" max-vertical-offset="3128">
+          <caret line="177" column="13" selection-start-line="177" selection-start-column="13" selection-end-line="177" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WebClient/res/layout/activity_web_client.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="1428">
+          <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
           <folding />
         </state>
       </provider>
