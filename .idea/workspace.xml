@@ -22,9 +22,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.example.webclient" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="402d816d-3950-4f89-9afd-ec25f3ded38a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="402d816d-3950-4f89-9afd-ec25f3ded38a" name="Default" comment="" />
     <ignored path="webclient.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
