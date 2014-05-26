@@ -28,6 +28,11 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.webclient.ShowUserInfo" />
+        <activity android:name=".UserRegister" />
+        <activity
+            android:name=".UserSetting"
+            android:label="LinearLayout" />
+        <activity android:name=".DailyRecord" />
     </application>
 
 </manifest>

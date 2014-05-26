@@ -1,38 +1,20 @@
 package com.example.webclient;
 
 import java.io.*;
-import java.net.*;
 
-import javax.security.auth.login.LoginException;
-
-import com.example.model.UserInfo;
 import com.example.protocol.*;
 
-import org.apache.http.client.*;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.*;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
-import android.os.Build;
 
 public class WebClientActivity extends Activity implements WaitingForResult {
 
@@ -72,11 +54,12 @@ public class WebClientActivity extends Activity implements WaitingForResult {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_client);
+        setContentView(R.layout.activity_login);
         
-        etUserName=(EditText) this.findViewById(R.id.etUserName);
-        etPassWord=(EditText) this.findViewById(R.id.etPassWord);
-        btnEnter=(Button) this.findViewById(R.id.btnEnter);
+        etUserName = (EditText) this.findViewById(R.id.etUserName);
+        etPassWord = (EditText) this.findViewById(R.id.etPassWord);
+        btnEnter = (Button) this.findViewById(R.id.btnEnter);
+        btnRegister = (Button) this.findViewById(R.id.btnRegister);
         progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
 
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -102,7 +85,16 @@ public class WebClientActivity extends Activity implements WaitingForResult {
                 loginP();
             }
         });
-        
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(WebClientActivity.this, UserRegister.class);
+                intent = new Intent(WebClientActivity.this, UserSetting.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
 
         if (savedInstanceState == null) {
 
@@ -289,6 +281,7 @@ public class WebClientActivity extends Activity implements WaitingForResult {
     private EditText etUserName;
     private EditText etPassWord;
     private Button btnEnter;
+    private Button btnRegister;
     private TextView tvHello;
     public static WebClientActivity webClientActivity=null;
 

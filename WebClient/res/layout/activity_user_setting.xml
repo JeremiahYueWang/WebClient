@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:onClick="clickOnUserStateMenu">
+
+        <TextView
+            android:id="@+id/user_setting_userstate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_setting_userstate"/>
+
+        <TextView
+            android:id="@+id/user_setting_username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/user_setting_info"
+        android:background="#a16c6c6c"/>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/user_setting_basicinfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_setting_basicinfo"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/user_setting_content"
+        android:background="#a16c6c6c"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/user_setting_notificationsetting"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_setting_notificationsetting"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/user_setting_diabethelper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_setting_diabetehelper"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/user_setting_mymission"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_setting_mymission"/>
+
+    </LinearLayout>
+
+</LinearLayout>

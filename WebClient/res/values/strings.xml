@@ -7,12 +7,35 @@
 
     <string name="action_quit">退出</string>
 
+    <!-- activity_login.xml -->
     <string name="tvusername">用户名</string>
     <string name="etusernamehint">请输入用户名</string>
     <string name="tvpassword">密码</string>
     <string name="etpasswordhint">请输入密码</string>    
     <string name="btnenter">确定</string>
+    <string name="btnregister">没有帐号，立即注册</string>
 
+    <!-- activity_user_register.xml -->
+    <string name="user_register_head">注册医随访 医生陪伴您</string>
+    <string name="user_register_etusername_hint">请输入用户名</string>
+    <string name="user_register_etpassword_hint">请输入密码</string>
+    <string name="user_register_btnenter">完成注册</string>
+
+    <!-- activity_user_setting.xml -->
+    <string name="user_setting_userstate">未登录</string>
+    <string name="user_setting_info">个人信息</string>
+    <string name="user_setting_basicinfo">基本信息</string>
+    <string name="user_setting_content">内容设置</string>
+    <string name="user_setting_notificationsetting">提醒设置</string>
+    <string name="user_setting_diabetehelper">糖尿病小助手</string>
+    <string name="user_setting_mymission">我的任务</string>
+
+    <!-- daily_record_item.xml -->
+    <string name="daily_record_item_title">测量血糖</string>
+    <string name="daily_record_item_test">开始测量</string>
+
+
+    <!-- activity_user_info.xml -->
     <string name="user_info_name">姓名</string>
     <string name="user_info_sex">性别</string>
     <string name="user_info_birthday">生日</string>
