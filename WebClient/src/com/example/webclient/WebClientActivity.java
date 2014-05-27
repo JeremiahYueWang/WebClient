@@ -90,7 +90,7 @@ public class WebClientActivity extends Activity implements WaitingForResult {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(WebClientActivity.this, UserRegister.class);
-                intent = new Intent(WebClientActivity.this, UserSetting.class);
+                intent = new Intent(WebClientActivity.this, DailyRecord.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }

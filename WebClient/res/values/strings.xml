@@ -30,9 +30,13 @@
     <string name="user_setting_diabetehelper">糖尿病小助手</string>
     <string name="user_setting_mymission">我的任务</string>
 
+    <!-- activity_daily_record.xml -->
+    <string name="daily_record_date">今天</string>
+
     <!-- daily_record_item.xml -->
     <string name="daily_record_item_title">测量血糖</string>
     <string name="daily_record_item_test">开始测量</string>
+    <string name="daily_record_item_delete">删除</string>
 
 
     <!-- activity_user_info.xml -->

@@ -6,7 +6,8 @@
     android:background="#9c5d5d5d"
     android:layout_marginTop="3dp"
     android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
+    android:layout_marginRight="5dp"
+    android:paddingLeft="10dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -24,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -45,5 +46,13 @@
             android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/daily_record_item_delete"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:text="@string/daily_record_item_delete"
+        android:visibility="invisible"/>
 
 </LinearLayout>
