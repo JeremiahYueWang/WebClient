@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Aozaki_Shiro on 5/26/2014.
  */
@@ -31,7 +34,8 @@ public class DailyRecord extends Activity {
         tvDailyRecordDate = (TextView) this.findViewById(R.id.daily_record_date);
         lstDailyRecordList = (ListView) this.findViewById(R.id.daily_record_list);
 
-        lstDailyRecordList.setAdapter(new MyAdapter(time, des));
+        initListData();
+        lstDailyRecordList.setAdapter(new MyAdapter(list));
         lstDailyRecordList.setOnItemClickListener(new  AdapterView.OnItemClickListener(){
 
             @Override
@@ -53,28 +57,38 @@ public class DailyRecord extends Activity {
 
     String[] time = {"7:00", "9:00", "13:00", "7:00", "9:00", "13:00", "7:00", "9:00", "13:00", "7:00", "9:00", "13:00"};
     String[] des = {"饭前", "", "饭后", "饭前", "", "饭后", "饭前", "", "饭后", "饭前", "", "饭后"};
+    private List<String[]> list;
+
+    private void initListData(){
+        list = new ArrayList<String[]>();
+        for(int i=0; i<time.length; i++){
+            String[] t = {time[i], des[i]};
+            list.add(t);
+        }
+    }
 
 
     class MyAdapter extends BaseAdapter{
 
         String[] description;
         String[] times;
+        //private List<String[] > list;
+        MyAdapter self;
 
-        public MyAdapter( String[] time,String[] des){
+        public MyAdapter( List<String[]> data){
 
-            times = time;
-            description = des;
-
+            //list = data;
+            self = this;
         }
 
         @Override
         public int getCount() {
-            return description.length;
+            return list.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return times[i];
+            return (list.get(i))[0];
         }
 
         @Override
@@ -92,8 +106,16 @@ public class DailyRecord extends Activity {
                 TextView tvTime = (TextView) recordItem.findViewById(R.id.daily_record_item_time);
                 TextView tvDescription = (TextView) recordItem.findViewById(R.id.daily_record_item_timedescription);
                 Button btnDelete = (Button) recordItem.findViewById(R.id.daily_record_item_delete);
-                tvTime.setText(times[i]);
-                tvDescription.setText(description[i]);
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Toast.makeText(DailyRecord.this, "hello", 1000).show();
+                        list.remove(i); //  问题，因为在onTouchListener中已经出现的button是以第i项数据，所以当删除掉当前的选项时，后面的数据item都减去一，所以还会出现删除按钮
+                        self.notifyDataSetChanged();
+                    }
+                });
+                tvTime.setText(list.get(i)[0]);
+                tvDescription.setText(list.get(i)[1]);
 
 
                 recordItem.setOnTouchListener(new View.OnTouchListener() {
@@ -105,16 +127,17 @@ public class DailyRecord extends Activity {
                         switch(motionEvent.getAction())//根据动作来执行代码
                         {
                             case MotionEvent.ACTION_MOVE://滑动
-                                Toast.makeText(context, "move...", 1000).show();
+                                //Toast.makeText(context, "move...", 1000).show();
                                 break;
                             case MotionEvent.ACTION_DOWN://按下
-                                Toast.makeText(context, "down...", 1000).show();
+                                //Toast.makeText(context, "down...", 1000).show();
                                 DownX = (int) motionEvent.getX();
                                 break;
                             case MotionEvent.ACTION_UP://松开
                                 UpX = (int) motionEvent.getX();
-                                Toast.makeText(context, "up..." + Math.abs(UpX-DownX), 1000).show();
+                                //Toast.makeText(context, "up..." + Math.abs(UpX-DownX), 1000).show();
                                 if(Math.abs(UpX-DownX) > 20){
+                                    btnDelete.setText("删除");
                                     btnDelete.setVisibility(View.VISIBLE);
                                 }
                                 break;
@@ -135,8 +158,8 @@ public class DailyRecord extends Activity {
 
                 TextView tvTime = (TextView) view.findViewById(R.id.daily_record_item_time);
                 TextView tvDescription = (TextView) view.findViewById(R.id.daily_record_item_timedescription);
-                tvTime.setText(times[i]);
-                tvDescription.setText(description[i]);
+                tvTime.setText(list.get(i)[0]);
+                tvDescription.setText(list.get(i)[1]);
                 return view;
 
             }
