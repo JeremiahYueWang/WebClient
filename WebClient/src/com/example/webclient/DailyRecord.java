@@ -41,11 +41,13 @@ public class DailyRecord extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+
                 TextView tvTime = (TextView) view.findViewById(R.id.daily_record_item_time);
                 TextView tvDescription = (TextView) view.findViewById(R.id.daily_record_item_timedescription);
 
                 Toast.makeText(DailyRecord.this, tvTime.getText().toString()+" "+tvDescription.getText().toString(), 1000).show();
                 DailyRecord.index = i;
+
 
             }
         });
@@ -54,6 +56,8 @@ public class DailyRecord extends Activity {
 
     private TextView tvDailyRecordDate;
     private ListView lstDailyRecordList;
+
+
 
     String[] time = {"7:00", "9:00", "13:00", "7:00", "9:00", "13:00", "7:00", "9:00", "13:00", "7:00", "9:00", "13:00"};
     String[] des = {"饭前", "", "饭后", "饭前", "", "饭后", "饭前", "", "饭后", "饭前", "", "饭后"};
@@ -97,6 +101,12 @@ public class DailyRecord extends Activity {
         }
 
         @Override
+        public void notifyDataSetChanged(){
+            super.notifyDataSetChanged();
+
+        }
+
+        @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             if(view == null) {
@@ -105,7 +115,7 @@ public class DailyRecord extends Activity {
                 View recordItem = inflater.inflate(R.layout.daily_record_item, null);
                 TextView tvTime = (TextView) recordItem.findViewById(R.id.daily_record_item_time);
                 TextView tvDescription = (TextView) recordItem.findViewById(R.id.daily_record_item_timedescription);
-                Button btnDelete = (Button) recordItem.findViewById(R.id.daily_record_item_delete);
+                TextView btnDelete = (TextView) recordItem.findViewById(R.id.daily_record_item_delete);
                 btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
